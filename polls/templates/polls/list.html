@@ -1,0 +1,31 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">-->
+
+<div class="row justify-content-center">
+	<div class="col-8">
+		<h1>All them Thoughts</h1>
+		<hr class="mt-0 mb-4">
+		{% if thoughts_list %}
+		<ul>
+			{% for thought in thoughts_list %}
+			<li>{{ thought.title_field }}</li>
+			{{ thought.description_field }}
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>No thoughts are posted.</p>
+		{% endif %}
+	</div>
+</div>
+
+<footer class="page-footer font-small blue fixed-bottom">
+	<div class="footer-copyright text-center py-3">&copy; 2021 Copyright: Thai-Phuc Nguyen </div>
+</footer>
