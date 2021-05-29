@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+{% extends 'login/base.html' %}
+{% block content %}
+{% load socialaccount %}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<style>
+    .window {
+        padding-left: 1%;
+        padding-right: 1%;
+        padding-top: 0%;
+    }
+
+    .button {
+        margin: 3%;
+        border-radius: 5%;
+    }
+
+    a {
+        color: white;
+        background-color: transparent;
+        text-decoration: none;
+    }
+
+    .loginContainer {
+        float: right;
+        padding-right: 10%;
+    }
+
+    a:hover {
+        color: #E57200;
+        background-color: transparent;
+        text-decoration: underline;
+    }
+
+    h1 {
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        color: white;
+        text-align: left;
+    }
+    .side {
+        color: white !important;
+    }
+</style>
+
+<!--
+/***************************************************************************************
+*  REFERENCES
+*  Title: In 5 mins: Set up Google login to sign up users on Django
+*  Author: Zoe Chew
+*  Date: Jul 27th, 2019
+*  URL: https://whizzoe.medium.com/in-5-mins-set-up-google-login-to-sign-up-users-on-django-e71d5c38f5d5
+*
+***************************************************************************************/
+
+login.html seems to be redundant, keeping it here just in case for now
+-->
+
+<head>
+    <title>MyMap</title>
+</head>
+
+<body onload="myonload()">
+    {% if user.is_authenticated %}
+    <h3>Welcome, {{ user.username }} !</h3>
+    <div class="loginContainer">
+        <a href="/accounts/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+    </div>
+
+    {% else %}
+    <div class="loginContainer">
+        <a href="{% provider_login_url 'google' %}">
+            <i class="fas fa-sign-in-alt"></i>
+            Login w/ Google
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/logina">
+            <i class="fas fa-sign-in-alt"></i>
+            Login with your account
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/register">
+            <i class="fas fa-sign-in-alt"></i>
+            Register
+        </a>
+    </div>
+    {% endif %}
+
+    <hr>
+    </hr>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col btn-group-vertical" style="background-color: #E57200; margin: 2%; padding: 2%; border-radius: 4%;">
+            <h3 style="margin-bottom: 10%;">Take me to:</h3>
+
+            <script>
+                function changeDestination(location) {
+                    var read_loc = location.replace("+", " ");
+                    alert("You're now going to: " + read_loc)
+                    var query_begin = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&origin=uva+parking&destination=";
+                    var query_end = "&avoid=tolls|highways&mode=walking";
+
+                    document.getElementById('iframe').src = query_begin + location + query_end;
+                }
+            </script>
+
+            <div class="btn-group-vertical side" role="group" aria-label="Button group with nested dropdown">
+
+                <button type="button" class="btn btn btn-outline-dark side " onclick="changeDestination('the+lawn+uva')">
+                    The Lawn
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('the+rotunda+uva')">
+                    The Rotunda
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gibbons+house+uva')">
+                    Gibbons
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    Gooch
+                </button>
+                <!--<button  type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    HoosAroundMe?
+                </button>-->
+
+                <button type="button" class="btn btn btn-outline-dark side">
+                    <a href="{% url 'map:search-page' %}">
+                        Choose your location =>
+                    </a>
+
+                </button>
+
+
+                <!--<div class="btn-group" role="group">
+                    <form action="{% url 'map:search-page' %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Choose your location">
+                    </form>
+                </div>-->
+
+            </div>
+
+            <!--<div class="btn-group" role="group">
+                <button onclick="changeDestination('the+lawn+uva')">
+                    The Lawn
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('the+rotunda+uva')">
+                    The Rotunda
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gibbons+house+uva')">
+                    Gibbons
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    Gooch
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    Look for my friends
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    HoosAroundMe?
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+
+                <form action="{% url 'map:search-page' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Choose your location">
+                </form>
+            </div>-->
+
+        </div>
+
+        <iframe id="iframe" width="50%" height="700" style="border:2; border-radius: 4%;" loading="lazy"
+            allowfullscreen src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ
+        &origin=514+Brandon+Avenue
+        &destination=the+corner+uva
+        &avoid=tolls|highways&mode=walking">
+        </iframe>
+<script>
+    function myonload(){
+        var begin ="https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&origin=";
+        var middle =   navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            };
+
+        var end = "&destination=the+corner+uva&avoid=tolls|highways&mode=walking";
+            document.getElementById("iframe").src = begin+middle+end;
+            alert(begin+middle+end);
+        }
+</script>
+        <div class="col-sm-2"></div>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'login/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+	.profile-image{
+		max-height: 100px;
+		max-width: 100px;
+	}
+	.profile-image{
+		border-radius: 12px;
+	}
+	.card{
+		border-radius: 12px;
+	}
+	.friends-text{
+		color: #000;
+		font-weight: 500;
+	}
+	.friends-text-container{
+		border: 1px solid #cccccc;
+		border-radius: 12px;
+	}
+	.friends-btn:hover {
+		background-color: #bfbfbf;
+		border-color: #bfbfbf;
+	}
+	.dropdown-toggle::after { 
+		content: none; 
+	}
+	.profile-link{
+		color: #000;
+	}
+	.checkmark-icon{
+		color: green;
+	}
+	.cancel-icon{
+		color: red;
+	}
+	
+</style>
+
+<!--
+/***************************************************************************************
+*  REFERENCES
+*  Title: Real-time Chat Messenger (only for account and friends system)
+*  Author: CodingWithMitch
+*  Date: Oct 16th, 2020
+*  URL: https://www.youtube.com/playlist?list=PLgCYzUzKIBE9KUJZJUmnDFYQfVyXYjX6r
+*
+***************************************************************************************/
+-->
+
+<div class="container">
+	<div class="card p-2">
+	<h2>{{this_user.username}}'s friends</h2>
+		{% if friends %}
+		<div class="d-flex flex-row flex-wrap">
+		{% for friend in friends %}
+		<div class="card flex-row flex-grow-1 p-2 mx-2 my-2 align-items-center">
+			<a class="profile-link" href="{% url 'map:account_view' user_id=friend.pk %}">
+				<div class="card-image m-2">
+					<img class="img-fluid profile-image" src="{{friend.profile_image.url}}" alt="">
+				</div>
+			</a>
+			
+			<div class="card-center px-2">
+				<a class="profile-link" href="{% url 'map:account_view' user_id=friend.pk %}">
+					<h4 class="card-title">{{friend.username|truncatechars:50}}</h4>
+				</a>
+			</div>
+			
+		</div>
+		{% if forloop.counter|divisibleby:2 %}
+		</div><div class="d-flex flex-row flex-wrap">
+		{% endif %}
+		
+		{% endfor %}
+		
+		{% else %} <!-- If no friends -->
+		<div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
+			<p>No friends :(</p>
+		</div>
+		{% endif %}
+		</div>
+	</div>
+	
+</div>
+
+
+{% endblock content %}

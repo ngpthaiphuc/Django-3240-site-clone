@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+{% extends 'login/base.html' %}
+{% block content %}
+{% load socialaccount %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<html>
+  <head>
+    <title>MyMap</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style type="text/css">
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        /*
+        height: 300px;
+        */
+        width: 50em;
+        height: 50em;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      /*
+      
+
+      .custom-map-control-button {
+        appearance: button;
+        background-color: #fff;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        margin: 10px;
+        padding: 0 0.5em;
+        height: 40px;
+        font: 400 18px Roboto, Arial, sans-serif;
+        overflow: hidden;
+      }
+      .custom-map-control-button:hover {
+        background: #ebebeb;
+      }
+      */
+    </style>
+
+
+<style>
+    .window {
+        padding-left: 1%;
+        padding-right: 1%;
+        padding-top: 0%;
+    }
+
+    .button {
+        margin: 3%;
+        border-radius: 5%;
+    }
+
+    a {
+        color: white;
+        background-color: transparent;
+        text-decoration: none;
+    }
+
+    .loginContainer {
+        float: right;
+        padding-right: 10%;
+    }
+
+    a:hover {
+        color: #E57200;
+        background-color: transparent;
+        text-decoration: underline;
+    }
+
+    h1 {
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        color: white;
+        text-align: left;
+    }
+    .side {
+        color: white !important;
+    }
+</style>
+
+
+    <script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
+      let map, infoWindow;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 6,
+        });
+        infoWindow = new google.maps.InfoWindow();
+        const locationButton = document.createElement("button");
+        locationButton.textContent = "Pan to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+          locationButton
+        );
+        locationButton.addEventListener("click", () => {
+          // Try HTML5 geolocation.
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                infoWindow.setPosition(pos);
+                infoWindow.setContent("Location found.");
+                infoWindow.open(map);
+                map.setCenter(pos);
+              },
+              () => {
+                handleLocationError(true, infoWindow, map.getCenter());
+              }
+            );
+          } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+          }
+        });
+      }
+      if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                infoWindow.setPosition(pos);
+                infoWindow.setContent("Location found.");
+                infoWindow.open(map);
+                map.setCenter(pos);
+                map.setZoom(15);
+              },
+              () => {
+                handleLocationError(true, infoWindow, map.getCenter());
+              }
+            );
+          } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+          }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+          browserHasGeolocation
+            ? "Error: The Geolocation service failed."
+            : "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+      }
+    </script>
+  </head>
+  <body>
+
+    {% if register %}
+    <h4 style="color:#E57200; text-align: center;">registration successful; you can login now</h4>
+    {%endif%}
+    {% if not_loggedin %}
+    <h4 style="color:#E57200; text-align: center;">login in first for the feature</h4>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <h3>Welcome, {{ user.username }} !</h3>
+    <div class="loginContainer">
+        <a href="/accounts/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+    </div>
+
+    {% else %}
+    <div class="loginContainer">
+        <a href="{% provider_login_url 'google' %}">
+            <i class="fas fa-sign-in-alt"></i>
+            Login w/ Google
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/logina">
+            <i class="fas fa-sign-in-alt"></i>
+            Login with your account
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/register">
+            <i class="fas fa-sign-in-alt"></i>
+            Register
+        </a>
+    </div>
+    {% endif %}
+
+    <hr>
+    </hr>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col btn-group-vertical" style="background-color: #E57200; margin: 2%; padding: 2%; border-radius: 4%;">
+            <h3 style="margin-bottom: 10%;">Take me to:</h3>
+
+            <script>
+                function changeDestination(location) {
+                    var read_loc = location.replace("+", " ");
+                    alert("You're now going to: " + read_loc)
+                    var query_begin = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&origin=uva+parking&destination=";
+                    var query_end = "&avoid=tolls|highways&mode=walking";
+
+                    document.getElementById('iframe').src = query_begin + location + query_end;
+                }
+            </script>
+
+            <div class="btn-group-vertical side" role="group" aria-label="Button group with nested dropdown">
+
+                <button type="button" class="btn btn btn-outline-dark side " onclick="changeDestination('the+lawn+uva')">
+                    The Lawn
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('the+rotunda+uva')">
+                    The Rotunda
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gibbons+house+uva')">
+                    Gibbons
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    Gooch
+                </button>
+                <!--<button  type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    HoosAroundMe?
+                </button>-->
+
+                <button type="button" class="btn btn btn-outline-dark side">
+                    <a href="{% url 'map:search-page' %}">
+                        Choose your location =>
+                    </a>
+
+                </button>
+
+
+                <!--<div class="btn-group" role="group">
+                    <form action="{% url 'map:search-page' %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Choose your location">
+                    </form>
+                </div>-->
+
+            </div>
+
+            
+
+        </div>
+
+    <div id="map" style="border:2; border-radius: 4%;"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
+    <div class="col-sm-1"></div>
+    </div>
+
+  </body>
+</html>
+{% endblock %}

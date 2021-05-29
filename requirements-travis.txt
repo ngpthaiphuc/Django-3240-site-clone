@@ -1,7 +1,7 @@
 Django
 gunicorn
-django-heroku
 django-allauth
 django-bootstrap4
+psycopg2-binary
 django-google-maps
 Pillow

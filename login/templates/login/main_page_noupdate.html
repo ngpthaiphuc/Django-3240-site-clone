@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+{% extends 'login/base.html' %}
+{% block content %}
+{% load socialaccount %}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<style>
+    .window {
+        padding-left: 1%;
+        padding-right: 1%;
+        padding-top: 0%;
+    }
+
+    .button {
+        margin: 3%;
+        border-radius: 5%;
+    }
+
+    a {
+        color: white;
+        background-color: transparent;
+        text-decoration: none;
+    }
+
+    .loginContainer {
+        float: right;
+        padding-right: 10%;
+    }
+
+    a:hover {
+        color: #E57200;
+        background-color: transparent;
+        text-decoration: underline;
+    }
+
+    h1 {
+        color: white;
+        text-align: center;
+    }
+
+    h3 {
+        color: white;
+        text-align: left;
+    }
+
+    .side {
+        color: white !important;
+    }
+</style>
+
+
+<head>
+    <title>MyMap</title>
+</head>
+
+<body>
+    {% if register %}
+    <h4 style="color:#E57200; text-align: center;"><b>Registration successful! You can login now</b></h4>
+    {%endif%}
+    {% if not_loggedin %}
+    <h4 style="color:#E57200; text-align: center;"><b>Login in first to use this feature</b></h4>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <h3><b>Welcome, {{ user.username }}!</b></h3>
+    <div class="loginContainer">
+        <a href="/accounts/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+    </div>
+
+    {% else %}
+    <div class="loginContainer">
+        <a href="{% provider_login_url 'google' %}">
+            <i class="fas fa-sign-in-alt"></i>
+            Login w/ Google
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/logina">
+            <i class="fas fa-sign-in-alt"></i>
+            Login with your account
+        </a>
+    </div>
+    <div class="loginContainer">
+        <a href="/register">
+            <i class="fas fa-sign-in-alt"></i>
+            Register
+        </a>
+    </div>
+    {% endif %}
+
+    <hr>
+    </hr>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col btn-group-vertical"
+            style="background-color: #E57200; margin: 2%; padding: 2%; border-radius: 4%;">
+            <h3 style="margin-bottom: 10%;">Take me to:</h3>
+
+            <script>
+                function getLocation(callback) {
+                    navigator.geolocation.getCurrentPosition(function (data) {
+                    var jsonLocation = data.coords.latitude+','+data.coords.longitude;
+
+                    callback(jsonLocation);
+
+                    });
+                }
+
+                function changeDestination(location) {
+                    var read_loc = location.replace("+", " ");
+                    //alert("You're now going to: " + read_loc)
+                    var query_begin = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&origin=";
+                    var query_middle ="&destination=";
+                    var query_end = "&avoid=tolls|highways&mode=walking";
+                    getLocation( function(jsonLocation){
+                        console.log("loc:"+jsonLocation)
+                        //middle = JSON.stringify( jsonLocation );
+                        var end = "&destination=the+corner+uva&avoid=tolls|highways&mode=walking";
+                        document.getElementById("iframe").src = query_begin + jsonLocation + query_middle + location + query_end;
+                    });
+                }
+            </script>
+
+            <div class="btn-group-vertical side" role="group" aria-label="Button group with nested dropdown">
+
+                <button type="button" class="btn btn btn-outline-dark side " onclick="changeDestination('the+lawn+uva')">
+                    The Lawn
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('amphitheater+uva')">
+                    The Amphitheater
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('the+corner+uva')">
+                    The Corner
+                </button>
+
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('AFC+uva')">
+                    AFC
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Slaughter+recreation+center+uva')">
+                    Slaughter Rec Center
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Clemons+library+uva')">
+                    Clemons Library
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Clark+hall+uva')">
+                    Clark Hall
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gibbons+house+uva')">
+                    Gibbons Dorm
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    Gooch Dorm
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Pavilion+XI+uva')">
+                    The Pav
+                </button>
+                <button type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Observatory+Hill+dining+room+uva')">
+                    Ohill Dining Hall
+                </button>
+
+                <!--
+                /***************************************************************************************
+                *  REFERENCES
+                *  Title: Dropdowns
+                *  Author: Bootstrap
+                *  Version: Boostrap 4
+                *  URL: https://getbootstrap.com/docs/4.0/components/dropdowns/#dropright-variation
+                *
+                ***************************************************************************************/
+                -->
+
+                <!--<div class="btn-group dropright">
+                    <button class="btn btn btn-outline-dark side btn-secondary dropdown-toggle" type="button" id="dropdownGyms"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #E57200">
+                        Gyms
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownGyms">
+                        <a class="dropdown-item" onclick="changeDestination('AFC+uva')">AFC</a>
+                        <a class="dropdown-item" onclick="changeDestination('Memorial+gym+uva')">Memorial Gym</a>
+                        <a class="dropdown-item" onclick="changeDestination('Slaugther+recreation+center+uva')">Slaughter Rec Center</a>
+                        <a class="dropdown-item" onclick="changeDestination('North+Grounds+recreation+center+uva')">North Grounds Rec Center</a>
+                        <a class="dropdown-item" onclick="changeDestination('Snyder+Tennis+Court+uva')">Tennis Court</a>
+                    </div>
+                </div>
+                <div class="btn-group dropright">
+                    <button class="btn btn btn-outline-dark side btn-secondary dropdown-toggle" type="button" id="dropdownLibraries"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #E57200">
+                        Libraries
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownLibraries">
+                        <a class="dropdown-item" onclick="changeDestination('Clemons+library+uva')">Clemons Library</a>
+                        <a class="dropdown-item" onclick="changeDestination('Alderman+library+uva')">Alderman Library</a>
+                        <a class="dropdown-item" onclick="changeDestination('Clark+hall+uva')">Clark Hall</a>
+                        <a class="dropdown-item" onclick="changeDestination('Music+library+uva')">Music Library</a>
+                    </div>
+                </div>
+                <div class="btn-group dropright">
+                    <button class="btn btn btn-outline-dark side btn-secondary dropdown-toggle" type="button" id="dropdownDorms"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #E57200">
+                        On-Campus Housing
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownDorms">
+                        <a class="dropdown-item" onclick="changeDestination('Gibbons+house+uva')">Gibbons Dorm</a>
+                        <a class="dropdown-item" onclick="changeDestination('Gooch+dillard+uva')">Gooch Dorm</a>
+                        <a class="dropdown-item" onclick="changeDestination('Alderman+dorm+uva')">Alderman Dorm</a>
+                        <a class="dropdown-item" onclick="changeDestination('McCormick+dorm+uva')">McCormick Dorm</a>
+                        <a class="dropdown-item" onclick="changeDestination('Brown+residential+college+uva')">Brown Residential College</a>
+                        <a class="dropdown-item" onclick="changeDestination('Hereford+residential+college+uva')">Hereford Residential College</a>
+                        <a class="dropdown-item" onclick="changeDestination('IRC+uva')">International Residential College</a>
+                    </div>
+                </div>
+                <div class="btn-group dropright">
+                    <button class="btn btn btn-outline-dark side btn-secondary dropdown-toggle" type="button" id="dropdownFood"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #E57200">
+                        On-Campus Food
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownFood">
+                        <a class="dropdown-item" onclick="changeDestination('Fresh+Food+Company+uva')">Newcomb Dining Hall</a>
+                        <a class="dropdown-item" onclick="changeDestination('Observatory+Hill+Dining+Room+uva')">Ohill Dining Hall</a>
+                        <a class="dropdown-item" onclick="changeDestination('Runk+Dining+Hall+uva')">Runk Dining Hall</a>
+                        <a class="dropdown-item" onclick="changeDestination('Amphitheater+uva')">Food Trucks</a>
+                        <a class="dropdown-item" onclick="changeDestination('Pavilion+XI+uva')">The Pav</a>
+                        <a class="dropdown-item" onclick="changeDestination('Crossroads+Food+Court+uva')">Crossroads</a>
+                        <a class="dropdown-item" onclick="changeDestination('The+Castle+uva')">The Castle</a>
+                        <a class="dropdown-item" onclick="changeDestination('Einstein+Bagels+Rice+uva')">Einstein Bagels @ Rice</a>
+                        <a class="dropdown-item" onclick="changeDestination('Starbucks+Nau+Hall+uva')">Starbucks @ Nau</a>
+                    </div>
+                </div>-->
+
+                <!--<button  type="button" class="btn btn btn-outline-dark side" onclick="changeDestination('Gooch+dillard+uva')">
+                    HoosAroundMe?
+                </button>-->
+
+                <button type="button" class="btn btn btn-outline-dark side">
+                    <a href="{% url 'map:find-page' %}">
+                        Choose your location =>
+                    </a>
+
+                </button>
+
+                <!--<button type="button" class="btn btn btn-outline-dark side">
+                    <a href="{% url 'map:search-page' %}">
+                        Covid Safety
+                    </a>
+
+                </button>-->
+            </div>
+
+            <!--<div class="btn-group" role="group">
+                <button onclick="changeDestination('the+lawn+uva')">
+                    The Lawn
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('the+rotunda+uva')">
+                    The Rotunda
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gibbons+house+uva')">
+                    Gibbons
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    Gooch
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    Look for my friends
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button onclick="changeDestination('Gooch+dillard+uva')">
+                    HoosAroundMe?
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <form action="{% url 'map:search-page' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Choose your location">
+                </form>
+            </div>-->
+
+        </div>
+
+        <iframe id="iframe" width="65%" height="750" style="border:2; border-radius: 4%;" loading="lazy" allowfullscreen
+            src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ
+        &origin=uva+parking
+        &destination=the+Rotunda+uva
+        &avoid=tolls|highways&mode=walking">
+        </iframe>
+        <div class="col-sm-1"></div>
+    </div>
+    <form id="update-loc" method="post">{% csrf_token %}
+        <input style="visibility: hidden; height: 1px;" name="pk" id="pk" class="form-control" value="{{this_user.pk}}">
+        <input style="visibility: hidden; height: 1px;" name="latitude" id="latitude" class="form-control" value="">
+        <input style="visibility: hidden; height: 1px;" name="longitude" id="longitude" class="form-control" value="">
+    </form>
+    <script>
+
+        var begin = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyCPPr47Z0_E8wR4WLD3_YrFDyCe19v4oJQ&origin=";
+
+        function getLocation(callback) {
+            navigator.geolocation.getCurrentPosition(function (data) {
+                var jsonLocation = data.coords.latitude + ',' + data.coords.longitude;
+
+                callback(jsonLocation);
+                var form = document.getElementById("update-loc");
+                form.method = "POST"
+                document.getElementById("latitude").value = data.coords.latitude;
+                document.getElementById("longitude").value = data.coords.longitude;
+            });
+        }
+
+        getLocation(function (jsonLocation) {
+            console.log("loc:" + jsonLocation)
+            //middle = JSON.stringify( jsonLocation );
+            var end = "&destination=the+Rotunda+uva&avoid=tolls|highways&mode=walking";
+            document.getElementById("iframe").src = begin + jsonLocation + end;
+        });
+
+
+    </script>
+
+</body>
+{% endblock %}

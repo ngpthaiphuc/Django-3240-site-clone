@@ -1,2 +1,1 @@
-release: python manage.py migrate
-web: gunicorn mysite.wsgi
+web: gunicorn cs3240-B30-project.wsgi

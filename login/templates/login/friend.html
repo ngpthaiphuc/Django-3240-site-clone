@@ -1,0 +1,20 @@
+<!--
+/***************************************************************************************
+*  REFERENCES
+*  Title: Real-time Chat Messenger (only for account and friends system)
+*  Author: CodingWithMitch
+*  Date: Oct 16th, 2020
+*  URL: https://www.youtube.com/playlist?list=PLgCYzUzKIBE9KUJZJUmnDFYQfVyXYjX6r
+*
+***************************************************************************************/
+-->
+
+<ul class = "all_users">
+    {% for user in allusers %}
+    {% if not user.is_superuser %}
+    {% if user not in request.user.friends.all and user != request.user %}
+    <h1>{{user}} <a href = "/send_friend_request/{{user.id}}/">send friend request</a> </h1>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</ul>

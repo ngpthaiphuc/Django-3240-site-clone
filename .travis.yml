@@ -1,0 +1,26 @@
+language: python
+python:
+- '3.8'
+install:
+- pip install -r requirements-travis.txt
+env:
+  global:
+  - PGPORT=5432
+services:
+  - postgresql
+before_script:
+  - sudo add-apt-repository --yes ppa:ubuntugis/ppa
+  - sudo apt-get --quiet update
+  - sudo apt-get install --yes libgdal-dev gdal-bin
+  - gdal-config --version
+
+  - psql -c 'create database travis_ci_test;' -U postgres
+script:
+- python manage.py test
+deploy:
+  provider: heroku
+  api_key:
+    secure: aheW+2zTANlBr5vhl085n2XQcL4gQrd7Qq2aOUXNlmsgLcl+uN9BszJ70iTiNu+ECRNoFN3lZ7udCWBp1s1iYGRoXIWnEyI0XpQScvpdGktD4CZhVW7zV75LUFxW5ivRiXSpjo6Z6p8g2kyx6cr20uCnw/tDYoJWpsUAHW6ccC2Q9c5R7SsNaUuIlSvO6SjI7tIl2VtynvR80XO+i1NSn26DDVadVNVk2+p2ASVm93oMjbJq4m8xR+Anqt6lnlZ0DnTqQSrewDWWzRNEbZVJMManVNQEm6+YqipdbWXSVawe1VJpJfqfu2vYWLpJcxIoB8DLSG75ZKc71ADx/iBAZ9BeBrhub5tHhu3Oxa+SCNe0RGHDdrTbU7udv0EGrBp8wKf7Hsk4f1Qcm78r43qATnHJjt5OYwAFa7yn/BNoM+EiPZbdu56py367VGKcj5m5mxGb5M8VMSWAwCq3mn6SBehYktIGKZCWUhJrYEOxz3BMV7hK+/gPotG/uQWnr0x2Vsh+EhnW+qDOEvYZmAtKv1kVa5LnjI/7gnfxQMFMr8Oy7JW7/gnzl5LCqKsIGtplPpkhn5jO1awQ/OoCbepAxQ4pzvTwrIwzV5DGHbYp4euQA2c6q/bF4T/qrGCHVXWa65DpEci6dilvjDQqddqYgjTh7JqdyrhwZBC5FR0lJN4=
+  app: b30-project
+  on:
+    repo: uva-cs3240-s21/project-b-30
